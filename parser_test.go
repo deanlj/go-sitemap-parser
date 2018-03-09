@@ -1,6 +1,10 @@
 package go_sitemap_parser
 
-import "testing"
+import (
+	"testing"
+	"os"
+	"fmt"
+)
 
 func TestSitemapParse1(t *testing.T) {
 	err := (&Sitemap{"ololo"}).Parse(make(chan SitemapUrl))
@@ -15,5 +19,22 @@ func TestSitemapParse2(t *testing.T) {
 
 	if err == nil {
 		t.Fail()
+	}
+}
+
+func TestSitemapParse3(t *testing.T) {
+	urlsChan := make(chan SitemapUrl, 1)
+
+	go func() {
+		err := (&Sitemap{"https://www.mos.ru/ru_sitemap.xml"}).Parse(urlsChan)
+
+		if err != nil {
+			t.Fatal(err)
+		}
+	}()
+
+	file, _ := os.Create("log")
+	for url := range urlsChan {
+		file.WriteString(fmt.Sprint(url))
 	}
 }
