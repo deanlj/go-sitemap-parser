@@ -4,6 +4,9 @@ import (
 	"testing"
 	"os"
 	"fmt"
+	"time"
+	"runtime"
+	"math"
 )
 
 func TestSitemapParse1(t *testing.T) {
@@ -23,6 +26,18 @@ func TestSitemapParse2(t *testing.T) {
 }
 
 func TestSitemapParse3(t *testing.T) {
+	start := time.Now()
+	var maxMem float64 = 0
+
+	go func() {
+		for {
+			var m runtime.MemStats
+			runtime.ReadMemStats(&m)
+			maxMem = math.Max(float64(m.Alloc), maxMem)
+			time.Sleep(100 * time.Millisecond)
+		}
+	}()
+
 	urlsChan := make(chan SitemapUrl, 1)
 
 	go func() {
@@ -37,4 +52,7 @@ func TestSitemapParse3(t *testing.T) {
 	for url := range urlsChan {
 		file.WriteString(fmt.Sprintln(url))
 	}
+
+	fmt.Println("script time", time.Since(start))
+	fmt.Println("script mem", maxMem)
 }
