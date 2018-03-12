@@ -35,6 +35,6 @@ func TestSitemapParse3(t *testing.T) {
 
 	file, _ := os.Create("log")
 	for url := range urlsChan {
-		file.WriteString(fmt.Sprint(url))
+		file.WriteString(fmt.Sprintln(url))
 	}
 }
