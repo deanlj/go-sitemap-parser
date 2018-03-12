@@ -26,7 +26,7 @@ func TestSitemapParse3(t *testing.T) {
 	urlsChan := make(chan SitemapUrl, 1)
 
 	go func() {
-		err := (&Sitemap{"https://www.mos.ru/ru_sitemap.xml"}).Parse(urlsChan)
+		err := (&Sitemap{"https://www.ozon.ru/sitemap.xml"}).Parse(urlsChan)
 
 		if err != nil {
 			t.Fatal(err)
